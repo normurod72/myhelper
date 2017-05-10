@@ -1,0 +1,14 @@
+ .navbar-wrapper
+  {
+    left:0;
+    top: 0;
+    background-color:#2495d0;
+    position:absolute;
+    margin-top: 0px;
+  }
+  .header1
+  {
+    overflow: hidden;
+    position: relative; 
+    height: 57px;
+  }
