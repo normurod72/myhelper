@@ -1,0 +1,75 @@
+<?php
+	session_start();
+	include "user_control.php";
+	if($_SERVER['REQUEST_METHOD']=='POST'){
+		
+		if(isset($_POST['current_pass'])){
+			
+			if($_SESSION['password'] == $_POST['current_pass']){
+				echo json_encode(array('password' => "TRUE" ));
+			}else{
+				echo json_encode(array('password' =>"FALSE"));
+			}
+		
+		}
+		else if(isset($_POST['update'])) 
+		{
+			$user_controller = new UserController("myhelper_db","localhost","root","",true);
+
+			if($user_controller->updateAttribute($_SESSION['id'], 'password', $_POST['update'])){
+				$_SESSION['password'] = $_POST['update'];
+				echo json_encode(array('update' => "TRUE" ));
+			}else{
+				echo json_encode(array('update' => "FALSE" ));
+			}
+
+		}
+		else
+		{
+			/*
+
+
+			Array ( [user_name] => Jasurbek [user_surname] => Abdiroziqov [user_distance] => 30 [user_email] => inha@mail.uz [user_contactphone] => 914747879 [describtion] => 12121 [lng] => 65.15512100 [lat] => 39.25999160 [address_hidden] => Muborak, Kashkadarya Province, Uzbekistan [save] => )
+
+			public $id;
+			public $name;
+			public $surname;
+			public $address;
+			public $lng;
+			public $lat;
+			public $professions=array();
+			public $distance;
+			public $email;
+			public $password;
+			public $contact_number;
+			public $description;
+
+
+			*/
+			print_r($_POST);
+			print($_FILES["user_image"]['tmp_name']==null);
+			$user_controller = new UserController("myhelper_db","localhost","root","",true);
+			$user = $user_controller->getUserById($_SESSION['id']);
+			$user->name = $_POST['user_name'];
+			$user->surname = $_POST['user_surname'];
+			$user->distance = $_POST['user_distance'];
+			$user->email = $_POST['user_email'];
+			$user->address = $_POST['address_hidden'];
+			$user->lat = $_POST['lat'];
+			$user->lng = $_POST['lng'];
+			$user->description  = $_POST['describtion'];
+			$user->contact_number = $_POST['user_contactphone'];
+			$user->id=$_SESSION["id"];
+			if(isset($_POST['user_proff'])){
+				$user->professions = $_POST['user_proff'];
+			}
+			if($user_controller->updateUser($user, $_FILES['user_image']['tmp_name'])){
+				$_SESSION['login'] = $_POST['user_email'];
+				header("Location:user_dashboard.php");
+			}else{
+				echo "error";
+			}
+		}	
+	}
+
+?>
