@@ -1,5 +1,4 @@
 <?php
-	
 	class Category
 	{
 		public $id;
@@ -17,8 +16,13 @@
 	class CategoryController
 	{
 		private $db;
-		function __construct($dbname, $host, $username, $password, $debug){
-			$this->debug=$debug;
+		function __construct(){
+			require("config.php");
+			$dbname = $configurations["db_name"];
+			$host = $configurations["host_name"];
+			$username = $configurations["username"];
+			$password = $configurations["password"];
+			$this->debug=$configurations["debug_mode"];
 			$this->db=new PDO("mysql:dbname=$dbname;host=$host",$username,$password);
 		    //$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	    	$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
@@ -50,7 +54,7 @@
 		}
 		function updateCategory($category)
 		{
-			if($this->db->exec("UPDATE categories SET name=[0], description=[1], icon=[2] WHERE id=[3]", array($category->name, $category->description, $category->icon, $category->id)))
+			if($this->db->exec($this->formatWithQuote("UPDATE categories SET name=[0], description=[1], icon=[2] WHERE id=[3]", array($category->name, $category->description, $category->icon, $category->id))))
 			{
 				$this->printError();
 				//return false;

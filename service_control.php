@@ -18,8 +18,13 @@
 	class ServiceController
 	{
 		private $db;
-		function __construct($dbname, $host, $username, $password, $debug){
-			$this->debug=$debug;
+		function __construct(){
+			require("config.php");
+			$dbname = $configurations["db_name"];
+			$host = $configurations["host_name"];
+			$username = $configurations["username"];
+			$password = $configurations["password"];
+			$this->debug=$configurations["debug_mode"];
 			$this->db=new PDO("mysql:dbname=$dbname;host=$host",$username,$password);
 		    //$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	    	$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
@@ -28,6 +33,24 @@
 		function __destruct()
 		{
 			$this->db=null;
+		}
+		function getServicesForCategory($category_id)
+		{
+			$services=array();
+			$query=$this->formatWithQuote("SELECT * FROM service_types WHERE category_id=[0]; ORDER BY id;",array($category_id));
+			$res=$this->db->query($query);
+			if($res)
+			{
+				foreach ($res as $row) 
+				{
+					$services[]=new Service($row["id"],$row["category_id"], $row["name"], $row["description"], $row["icon"]);
+				}
+			}
+			else
+			{
+				$this->printError();
+			}
+			return $services;
 		}
 		function searchService($keyword)
 		{
@@ -76,7 +99,7 @@
 		}
 		function updateService($service)
 		{
-			if($this->db->exec("UPDATE service_types SET category_id=[0] name=[1], description=[2], icon=[3] WHERE id=[4]", array($service->category_id, $service->name, $service->description, $service->icon, $service->id)))
+			if($this->db->exec($this->formatWithQuote("UPDATE service_types SET category_id=[0], name=[1], description=[2], icon=[3] WHERE id=[4]", array($service->category_id, $service->name, $service->description, $service->icon, $service->id))))
 			{
 				$this->printError();
 				//return false;

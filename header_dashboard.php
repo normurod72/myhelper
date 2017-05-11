@@ -15,7 +15,7 @@
               <ul class="nav navbar-nav navbar-right">
                <li><a href="admin.php"><span class="glyphicon glyphicon-dashboard"></span> Dashoard</a></li>
                 <li><a href="index.php"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
+                <li><a href="main.php?page=news"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
                 <li><a href="log_out.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
               </ul>
             </div>

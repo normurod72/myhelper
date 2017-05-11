@@ -16,7 +16,7 @@
    <br><br> <h2 style="color:#0fad00; font-size: 50px;">Success</h2>
     <img src="images/check.png" height="150" width="150">
      <h3>Dear, User</h3>
-      <p style="font-size:20px;color:#5C5C5C;">Thank you for verifying your details. Your requst registrated successfully. We will call in a hour.</p>
+      <p style="font-size:20px;color:#5C5C5C;">Thank you for verifying your details. Your requst registrated successfully.</p>
       <a href="index.php" class="btn btn-success hms-btn-success">Home</a>
     <br><br>
    </div>

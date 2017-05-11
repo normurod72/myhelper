@@ -14,7 +14,7 @@
 		}
 		else if(isset($_POST['update'])) 
 		{
-			$user_controller = new UserController("myhelper_db","localhost","root","",true);
+			$user_controller = new UserController();
 
 			if($user_controller->updateAttribute($_SESSION['id'], 'password', $_POST['update'])){
 				$_SESSION['password'] = $_POST['update'];
@@ -26,29 +26,8 @@
 		}
 		else
 		{
-			/*
 
-
-			Array ( [user_name] => Jasurbek [user_surname] => Abdiroziqov [user_distance] => 30 [user_email] => inha@mail.uz [user_contactphone] => 914747879 [describtion] => 12121 [lng] => 65.15512100 [lat] => 39.25999160 [address_hidden] => Muborak, Kashkadarya Province, Uzbekistan [save] => )
-
-			public $id;
-			public $name;
-			public $surname;
-			public $address;
-			public $lng;
-			public $lat;
-			public $professions=array();
-			public $distance;
-			public $email;
-			public $password;
-			public $contact_number;
-			public $description;
-
-
-			*/
-			print_r($_POST);
-			print($_FILES["user_image"]['tmp_name']==null);
-			$user_controller = new UserController("myhelper_db","localhost","root","",true);
+			$user_controller = new UserController();
 			$user = $user_controller->getUserById($_SESSION['id']);
 			$user->name = $_POST['user_name'];
 			$user->surname = $_POST['user_surname'];
@@ -65,6 +44,7 @@
 			}
 			if($user_controller->updateUser($user, $_FILES['user_image']['tmp_name'])){
 				$_SESSION['login'] = $_POST['user_email'];
+				//print_r($_POST);
 				header("Location:user_dashboard.php");
 			}else{
 				echo "error";

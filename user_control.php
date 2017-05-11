@@ -1,6 +1,5 @@
 <?php
 
-
 class User 
 {
 
@@ -49,8 +48,13 @@ class UserController{
 		private $db;
 		private $debug=false;
 
-	function __construct($dbname, $host, $username, $password, $debug){
-		$this->debug=$debug;
+	function __construct(){
+			require("config.php");
+			$dbname = $configurations["db_name"];
+			$host = $configurations["host_name"];
+			$username = $configurations["username"];
+			$password = $configurations["password"];
+			$this->debug=$configurations["debug_mode"];
 		$this->db=new PDO("mysql:dbname=$dbname;host=$host",$username,$password);
 	    //$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     	$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
@@ -71,7 +75,7 @@ class UserController{
 			{
 				$id=$this->db->quote($row["id"]);
 				$user=new User($row["name"], $row["surname"], $row["address"],
-				array(),$row["lng"], $row["lat"], $row["email"] ,$row["password"], $row["contact_number"], $row["id"],$row["description"]);
+				array(),$row["lng"], $row["lat"], $row["email"] ,$row["password"], $row["contact_number"], $row["distance"], $row["id"],$row["description"]);
 				$user->id=$row["id"];
 				$professions=array();
 				$resP=$this->db->query("SELECT service_id FROM service_assign WHERE user_id=$id; ORDER BY service_id;");
@@ -163,6 +167,7 @@ class UserController{
 			$count=count($professions);
 			if(!$this->db->exec($query))
 			{
+				echo "DELETE error";
 				$this->printError();
 				return false;
 			}
@@ -180,6 +185,7 @@ class UserController{
 			}
 			if($image && $id>0)
 			{
+				echo $id;
 				return copy($image, "profile_images/$id.png");
 			}
 			return true;
@@ -215,7 +221,7 @@ class UserController{
 	function getUser($email, $password)
 	{
 		
-		$res=$this->db->query($this->formatWithQuote("SELECT name, surname, address, lng, lat, contact_number, id, description FROM users WHERE email=[0] AND password=[1] LIMIT 1;",array($email, $password)));
+		$res=$this->db->query($this->formatWithQuote("SELECT name, surname, address, lng, lat, contact_number,distance, id, description FROM users WHERE email=[0] AND password=[1] LIMIT 1;",array($email, $password)));
 		if(!$res)
 		{
 			$this->printError();
@@ -226,7 +232,7 @@ class UserController{
 			$row=$res->fetch();
 			$idQ=$this->db->quote($row["id"]);
 			$user=new User($row["name"], $row["surname"], $row["address"],
-				array(),$row["lng"], $row["lat"], $email ,$password, $row["contact_number"], $row["id"],$row["description"]);
+				array(),$row["lng"], $row["lat"], $email ,$password, $row["contact_number"], $row["distance"], $row["id"],$row["description"]);
 			$user->id=$row["id"];
 			$res->closeCursor();
 			$professions=array();
@@ -287,7 +293,7 @@ class UserController{
 	function getUserById($id)
 	{
 		$idQ=$this->db->quote($id);
-		$res=$this->db->query("SELECT email, password, name, surname, address, lng, lat, contact_number, description FROM users WHERE id=$id LIMIT 1;");
+		$res=$this->db->query("SELECT email, password, name, surname, address, lng, lat, contact_number,distance, description FROM users WHERE id=$id LIMIT 1;");
 		if(!$res)
 		{
 			$this->printError();
@@ -298,7 +304,7 @@ class UserController{
 			$row=$res->fetch();
 			
 			$user=new User($row["name"], $row["surname"], $row["address"],
-				array(),$row["lng"], $row["lat"], $row["email"] ,$row["password"], $row["contact_number"], $id, $row["description"]);
+				array(),$row["lng"], $row["lat"], $row["email"] ,$row["password"], $row["contact_number"],$row["distance"], $id, $row["description"]);
 			$user->id=$id;
 			$professions=array();
 

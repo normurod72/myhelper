@@ -2,10 +2,14 @@
 session_start();
 include "category_control.php";
 include "user_control.php";
-$category_controller = new CategoryController("myhelper_db","localhost","root","",true);
+include "post_control.php";
+$category_controller = new CategoryController();
 $all_categories = $category_controller->getAllCategories();
-$user_controller = new UserController("myhelper_db","localhost","root","",true);
+$user_controller = new UserController();
 $all_users = $user_controller->getAllUsers();
+$post_controller = new PostController();
+$all_posts = $post_controller->getAllPosts();
+
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +76,7 @@ $all_users = $user_controller->getAllUsers();
   </div>
   <div class="main-text">
     <div class="col-md-12 text-center">
-      <h1>We always ready to help you!</h1>
+      <h1>We are always ready to help you!</h1>
       <br>
       <br>
       <form action="search.php" method="get">
@@ -100,35 +104,35 @@ $all_users = $user_controller->getAllUsers();
 
   <div class="container">
     
-    <div class="jumbotron hms-news-block col-md-6">
-      <div class="bs-callout bs-callout-info">
-        <div class="col-sm-5">
-          
-          <img src="images/img.jpg" class="img-responsive">
-        </div>
-        <div class="col-sm-7">
-          <p>Pet care services</p>
-          <p class="hms-news-block-description">We are planning to offer another type of service to our customers that involves pet care</p>
-          <p class="hms-news-block-span"><span>09.05.2017 | Administrator</span></p>
-          <a href="main.php?page=view-post" style="font-size: 12pt;">Read more <i class="fa fa-angle-double-right"></i></a>
-        </div>
-      </div>
-    </div>
+    <?php 
+    $number_posts = ((count($all_posts)>2) ? 2 : count($all_posts));
+    for ($i=0; $i < $number_posts; $i++) { 
+  
 
+     ?>
     <div class="jumbotron hms-news-block col-md-6">
       <div class="bs-callout bs-callout-info">
         <div class="col-sm-5">
           
-          <img src="images/img.jpg" class="img-responsive">
+          <img style="height: 150px" src="post_images/<?php echo file_exists("post_images/".$all_posts[$i]->id.".png")?$all_posts[$i]->id : "post_default";?>.png" class="img-responsive">
         </div>
         <div class="col-sm-7">
-          <p>Max auto service company</p>
-          <p class="hms-news-block-description">We are in last step of assigning contract one of the best auto service providers named "Max auto service"</p>
-          <p class="hms-news-block-span"><span>09.05.2017 | Administrator</span></p>
-          <a href="../migration" style="font-size: 12pt;">Read more <i class="fa fa-angle-double-right"></i></a>
+          <p><?php echo $all_posts[$i]->title; ?></p>
+          <p class="hms-news-block-description">
+            <?php
+                    if(strlen($all_posts[$i]->description)>30){
+                      echo substr($all_posts[$i]->description, 0,30)."<b> . . .</b>";
+                    }else{
+                      echo $all_posts[$i]->description;
+                    }
+            ?>
+          </p>
+          <p class="hms-news-block-span"><span><?php echo $all_posts[$i]->create_date ?>| Administrator</span></p>
+          <a href="main.php?page=view-post&post_id=<?php echo $all_posts[$i]->id ?>" style="font-size: 12pt;">Read more <i class="fa fa-angle-double-right"></i></a>
         </div>
       </div>
     </div>
+<?php }?>
     
   </div>
     <!-- News block end -->
@@ -146,7 +150,8 @@ $all_users = $user_controller->getAllUsers();
       <div class="row">
 
               <?php
-                  for ($i=0; $i < count($all_categories); $i++) { 
+                  $number = ((count($all_categories) < 7) ? count($all_categories) : 6); 
+                  for ($i=0; $i < $number; $i++) { 
                     
                   
 
@@ -180,21 +185,20 @@ $all_users = $user_controller->getAllUsers();
    <div class="container">
      <div class="row">
       <?php 
-            for ($i=0; $i < count($all_users) ; $i++) { 
+            $user_count = ((count($all_users) < 4)? count($all_users) : 3);
+            for ($i=0; $i < $user_count; $i++) { 
               # code...
             
       ?>
       <div class="col-sm-6 col-md-4">
         <div class="thumbnail hms-thumbnail">
             <div class="col-md-12 hms-thumbnail-img">
-              <img src="profile_images/<?php echo 
-              file_exists("profile_images/".$all_users[$i]->id) ? $all_users[$i]->id:"default"; 
-              ?>.png" height="200" width="200" class="img-circle" alt="...">
+              <img src="profile_images/<?php echo file_exists("profile_images/".$all_users[$i]->id.".png") ? $all_users[$i]->id:"default";?>.png" height="200" width="200" class="img-circle" alt="...">
             </div>
             <div class="caption">
               <h3><?php echo $all_users[$i]->name." ".$all_users[$i]->surname ?></h3>
               <p><?php echo $all_users[$i]->description ?></p>
-              <p><a href="main.php?page=view-user" class="btn btn-primary hms-btn-primary pull-right hms-btn-primary" role="button">More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a></p>
+              <p><a href="main.php?page=view-user&user_id=<?php echo $all_users[$i]->id ?>" class="btn btn-primary hms-btn-primary pull-right hms-btn-primary" role="button">More <i class="fa fa-angle-double-right" aria-hidden="true"></i></a></p>
             </div>
           </div>
         </div>

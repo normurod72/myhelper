@@ -4,15 +4,18 @@
   include "user_control.php";
   include "category_control.php";
   include "service_control.php";
+  include "order_control.php";
   if(!isset($_GET['page'])){header("Location:?page=dashboard");} 
-  $post_controller = new PostController("myhelper_db", "localhost", "root", "", true);
+  $post_controller = new PostController();
   $post = $post_controller->getAllPosts(); 
-  $user_controller = new UserController("myhelper_db", "localhost", "root", "", true);
+  $user_controller = new UserController();
   $users = $user_controller->getAllUsers();
-  $category_controller = new CategoryController("myhelper_db","localhost","root","",true);
-  $service_controller=new ServiceController("myhelper_db","localhost","root","",true);
-  
-
+  $category_controller = new CategoryController();
+  $service_controller=new ServiceController();
+  $all_categories = $category_controller->getAllCategories();
+  $all_services = $service_controller->getAllServices();
+  $order_controller = new OrderController();
+  $all_orders = $order_controller->getAllOrders();
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,7 +54,6 @@
           </ul>
           <ul class="nav nav-sidebar">
             <li <?php echo ($_GET['page']=='dashboard')?'class="active"':'';?>><a href="?page=dashboard">Dashboard</a></li>
-            <li><a href="#">Analytics</a></li>
           </ul>
           <ul class="nav nav-sidebar">
             <li <?php echo ($_GET['page']=='posts')?'class="active"':'';?>><a href="?page=posts">Posts</a></li>
@@ -71,26 +73,113 @@
           <h1 class="page-header">Dashboard</h1>
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+              <i class="fa fa-user hms-admin-dashboard-icon"></i>
+              <h4>All User</h4>
+              <br>
+              <span class="text-muted"><?php echo "<b>".count($users)."</b>"; ?></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+              <i class="fa fa-newspaper-o hms-admin-dashboard-icon"></i>
+              <h4>All News</h4>
+              <br>
+              <span class="text-muted"><?php echo "<b>".count($post)."</b>"; ?></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+              <i class="fa fa-gears hms-admin-dashboard-icon"></i>
+             <h4>All Services</h4>
+              <br>
+              <span class="text-muted"><?php echo "<b>".count($all_services)."</b>"; ?></span>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+              <i class="fa fa-tags hms-admin-dashboard-icon"></i>
+             <h4>All Categories</h4>
+              <br>
+              <span class="text-muted"><?php echo "<b>".count($all_categories)."</b>"; ?></span>
             </div>
-          </div> 
+          </div>
+
+          <h1 class="page-header">Orders</h1>
+            <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Service</th>
+                  <th>Contact number</th>
+                  <th>Address</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php 
+
+                for($i = 0; $i < count($all_orders); $i++){
+                  $c_ser = $service_controller->getService($all_orders[$i]->service_id);
+
+                 ?>             
+                <tr id="<?php echo $all_orders[$i]->id; ?>">
+
+                  <td><?php echo $i+1; ?></td>
+                  <td><?php echo $all_orders[$i]->name; ?></td>
+                  <td><?php echo $c_ser->name; ?></td>
+                  <td><?php echo $all_orders[$i]->contact_number; ?></td>
+                  <td><?php echo $all_orders[$i]->address; ?></td>
+                  <td><?php echo $all_orders[$i]->description; ?></td>
+                  <td>
+                    <button data-id="<?php echo $all_orders[$i]->id; ?>" class="btn btn-md btn-danger hms-btn-danger delete-orders"><span class="glyphicon glyphicon-remove-circle"></span> Delete</button>
+                  </td>
+                </tr>
+              <?php }?>
+              </tbody>
+            </table>
+          </div>
+
+          <script type="text/javascript">
+                $(function(){
+
+                  $(".delete-orders").click(function(){ 
+                      var parentId=$(this).data('id');
+                      $("#"+parentId+" td").hide();
+                      $("#"+parentId).append('<td colspan="7" class="confirmation"><div class="alert alert-danger col-md-12"> Are you sure to delete this item? <b>NOTE:</b> It cannot be <b>recovered</b> later. <button class="btn btn-sm btn-default confirm-yes">Yes</button> <button class="btn btn-sm btn-default confirm-no">No</button></div></td>');
+                      
+
+                      $(".confirm-yes").click(function(){
+                        $.ajax({
+                          method: "POST",
+                          url: "order_request_handler.php",
+                          dataType: "json",
+                          data: {
+                            delete_order: 1,
+                            order_id : parentId
+                          }
+                        }).done(function(res){
+                          console.log(res);
+                          if(res.delete == "SECCESS"){
+                              $("#"+parentId).hide('slow');
+                              setTimeout(function(){
+                                $("#"+parentId).remove();
+                              },1000);
+                            }else{
+                              alert("Post cannot be deleted right now");
+                               $("#"+parentId+" .confirmation").remove();
+                               $("#"+parentId+" td").show();
+                            }
+                        }).fail(function(res){
+                            console.log(res);
+                        });
+
+                      });
+                      $(".confirm-no").click(function(){
+                        $("#"+parentId+" .confirmation").remove();
+                        $("#"+parentId+" td").show();
+                      });
+                  });
+                });
+
+                </script>
+
           <?php } ?>
           
           
@@ -125,7 +214,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="control-label" for="hms-post-photo">Photo</label>  
-                <img src="post_images/<?php file_exists("post_images/".$post_current->id) ? $post_current->id:"post_default";?>.png" class="thumbnail hms-thumbnail img-responsive">
+                <img src="post_images/<?php echo file_exists("post_images/".$post_current->id.".png") ? $post_current->id:"post_default";?>.png" class="thumbnail hms-thumbnail img-responsive">
                 <input id="hms-post-photo" name="post_image" type="file" style="padding-top: 4px; top: -3px;position: relative;" class="form-control hms-form-control input-md">
               </div>
             </div>
@@ -199,11 +288,11 @@
                   <td><?php 
                   $res_pro = $users[$i]->professions;//$user_controller->getProfessions($users[$i]->id);
                   
-                  for ($i=0; $i < count($res_pro); $i++) { 
-                    echo $res_pro[$i];
+                  for ($j=0; $j < count($res_pro); $j++) { 
+                    echo $res_pro[$j];
                   }
                   ?></td>
-                  <td><img src="profile_images/<?php echo ($users[$i]->id >0)? $users[$i]->id: "default"; ?>.png"></td>
+                  <td><img height="70" src="profile_images/<?php echo file_exists("profile_images/".$users[$i]->id.".png") ? $users[$i]->id:"default"; ?>.png"></td>
                  
                   <td>
                     <button class="btn btn-md btn-danger hms-btn-danger"><span class="glyphicon glyphicon-remove-circle"></span> Delete</button>
@@ -310,7 +399,7 @@
            <?php if($_GET['page']=='categories'){ 
 
            
-            $all_categories = $category_controller->getAllCategories();
+           
 
 
             ?>
@@ -398,7 +487,7 @@
 
            <?php if($_GET['page']=='services'){ 
            
-            $all_services = $service_controller->getAllServices();
+           
 
             ?>
            <h1 class="page-header">Services</h1> 
@@ -639,7 +728,7 @@
           <h1 class="page-header">Edit Category</h1>
           <form class="hms-form-register" action="category_request_handler.php" method="post" enctype="multipart/form-data">
               <span class="hms-required-fields">* fields are required</span>
-              <input type="text" readonly hidden name="<?php echo $current_category->id?>">
+              <input type="text" readonly hidden name="id" value="<?php echo $current_category->id?>">
               <hr>
             <div class="col-md-12">
             </div>  

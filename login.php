@@ -20,11 +20,18 @@
                 <form role="form" action="request_handler.php" method="post" id="login-form" autocomplete="off">
                     <div class="form-group">
                         <label for="email" class="sr-only">Email</label>
-                        <input type="email" name="email" id="email" class="form-control hms-form-control" placeholder="Email or Username">
+                        <input type="text" name="email" id="email" class="form-control hms-form-control" placeholder="Email or Username">
                     </div>
                     <div class="form-group">
                         <label for="key" class="sr-only">Password</label>
                         <input type="password" name="key" id="key" class="form-control hms-form-control" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="sr-only">Role</label>
+                        <select class="form-control" name="role">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
                     </div>
                     <div class="checkbox">
                         <span id="checkbox_id" class="character-checkbox" onclick="showPassword()"></span>

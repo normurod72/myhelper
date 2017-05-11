@@ -5,14 +5,15 @@ include "service_control.php";
 		if(isset($_POST['add'])){
 			$service = new Service(-1, $_POST['category_id'], $_POST['title'], $_POST['description'], $_POST['icon']);
 			//print_r($service);
-			$service_controller = new ServiceController("myhelper_db","localhost","root","",true);
+			$service_controller = new ServiceController();
 			if($service_controller->addService($service)){
 				header('Location:admin.php?page=services');
 			}else{
 				echo "error";
 			}
 		}elseif(isset($_POST['edit'])){
-			$service_controller = new ServiceController("myhelper_db","localhost","root", "",true);
+			$service_controller = new ServiceController();
+				//print_r($_POST);
 			$service = $service_controller->getService($_POST['id']);
 			$service->name = $_POST['title'];
 			$service->category_id = $_POST['category_id'];
@@ -25,7 +26,7 @@ include "service_control.php";
 				echo "error";
 			}
 		}elseif(isset($_POST['delete'])){
-			$service_controller = new ServiceController("myhelper_db","localhost","root", "",true);
+			$service_controller = new ServiceController();
 			
 			if($service_controller->deleteService($_POST['service_id'])){
 				echo json_encode(array('delete' => "SUCCESS" ));

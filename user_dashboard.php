@@ -1,9 +1,13 @@
 <?php 
     session_start();
+    if(!isset($_SESSION['login'])){ header("Location:login.php");}
     include "user_control.php";
+    include "service_control.php";
     if(!isset($_GET['page'])){header("Location:?page=dashboard");}
-    $user_controller = new UserController("myhelper_db","localhost","root","",true);
+    $user_controller = new UserController();
     $user = $user_controller->getUserById($_SESSION['id']);
+    $service_controller = new ServiceController();
+    $all_services = $service_controller->getAllServices();
 
  ?>
 <!DOCTYPE html>
@@ -43,7 +47,7 @@
         <div class="col-sm-3 col-md-3 well hms-user-well">
           <ul class="nav nav-sidebar">
             <div class="col-md-12 placeholder">
-              <img src="profile_images/<?php file_exists("profile_images/".$user->id) ? $user->id:"default";?>.png" height="120" width="120"  alt="Generic placeholder thumbnail">
+              <img src="profile_images/<?php echo file_exists("profile_images/".$user->id.".png") ? $user->id:"default";?>.png" height="120" width="120"  alt="Generic placeholder thumbnail">
               <h4><?php echo $user->name." ".$user->surname ?></h4>
               <span class="text-muted">Rating of the user 5.2</span>
             </div>
@@ -60,9 +64,9 @@
 
           <?php if($_GET['page']=='dashboard'){
             require "order_control.php";
-            require "service_control.php";
-            $service_cont=new ServiceController("myhelper_db","localhost","root","",true);
-            $order_cont=new OrderController("myhelper_db","localhost","root","",true);
+            
+            $service_cont=new ServiceController();
+            $order_cont=new OrderController();
             $orders=$order_cont->getNotSelectedOrderForUser($user->id);
             $order_count=count($orders);
            ?>
@@ -79,12 +83,46 @@
               <p class="hms-user-notification-card-message"><?= $row->description?></p>
               <!-- <hr> -->
               <input type='text' hidden value="<?=$row->id?>">
-              <p class="blog-post-meta hms-user-notification-card-footer"> <button class="btn btn-primary hms-btn-primary">Apply</button> <span style="float: right;"><?=$row->address?> | <?=$row->contact_number?> | <?=$row->name?> | <?=$row->email?></span></p>
+              <p class="blog-post-meta hms-user-notification-card-footer"> <button
+                onclick="addMap('MyHELPER','41.348528','69.237278')" data-toggle="modal" data-target="#user_apply_modal"
+               class="btn btn-primary hms-btn-primary">Apply</button> <span style="float: right;"><?=$row->address?> | <?=$row->contact_number?> | <?=$row->name?> | <?=$row->email?></span></p>
             </div>
             <div class="col-md-3">
               <i class="<?=($service)?$service->icon:''?>" ></i>
             </div>
           </blockquote>
+
+
+
+<!-- Modal -->
+<div id="user_apply_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button  type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Change password</h4>
+      </div>
+
+      <div class="modal-body">
+          
+            
+        </div>
+      <div class="modal-footer">
+        <button name="submit_to_order" id="submit_to_order" type="button" class="btn btn-success hms-btn-success" data-dismiss="modal">Submit</button>
+        <button  type="button" class="btn btn-default hms-btn-default" data-dismiss="modal">Close</button>
+      </div>
+      </div>
+    </div>
+</div>
+<!-- Modal -->
+<script type="text/javascript">
+  function addMap(addr="Fizmasoft",lat=41.348528,lng=69.237278){
+    $("#user_apply_modal .modal-body").html('<div style="overflow:hidden;width:100%;height:300px; margin-top:10px; margin-bottom:10px;resize:none;max-width:100%; border: 3px solid white;box-shadow: 0px 0px 1px 0px black;"><div style="width: 500px"><iframe width="600" height="300" src="http://www.maps.ie/create-google-map/map.php?width=500&amp;height=400&amp;hl=en&amp;coord='+lat+','+lng+'&amp;q=('+addr+')&amp;ie=UTF8&amp;t=h&amp;z=15&amp;iwloc=A&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="http://www.mapsdirections.info/de/erstellen-sie-eine-google-map/">Google Map</a> by <a href="http://www.mapsdirections.info/de/">Erstellen Google Map</a></iframe></div><a class="embed-map-code" href="http://www.hostingreviews.website/compare/ipage-vs-bluehost" id="authorize-maps-data">details here</a><style>#my-map-canvas img{max-width:none!important;background:none!important;}</style></div>');
+  }
+</script>
+
         <?php } ?>
 
 
@@ -94,8 +132,8 @@
           <?php if($_GET['page']=='archives'){ 
              require "order_control.php";
             require "service_control.php";
-            $service_cont=new ServiceController("myhelper_db","localhost","root","",true);
-            $order_cont=new OrderController("myhelper_db","localhost","root","",true);
+            $service_cont=new ServiceController();
+            $order_cont=new OrderController();
             $orders=$order_cont->getSelectedOrderForUser($user->id);
             $order_count=count($orders);
             ?>
@@ -125,7 +163,7 @@
           
 
           <?php if($_GET['page']=='profile'){ ?>
-            <h1 class="page-header">My Profile </h1>
+            <h1 class="page-header">My Profile</h1>
             <form action="update.php" method="post" enctype="multipart/form-data" class="form-horizontal hms-form-register">
               <fieldset>
                 <div class="col-md-6 has-feedback" style="padding-right: 35px;">
@@ -147,17 +185,9 @@
                     <label class="control-label" for="login">What is your profession?</label>  
                       
                        <select class="form-control hms-form-control selectpicker" id="proff_id" name="user_proff"  multiple>
-                        <option>Laptop repair</option>
-                        <option>Phone repair</option>
-                        <option>Electronics repair</option>
-                        <option>Tablets repair</option>
-                        <option>Printer repair</option>
-                        <option>Operation system service</option>
-                        <option>Wi-fi devivice service</option>
-                        <option>Beauty services</option>
-                        <option>Moving services</option>
-                        <option>Cleaning services</option>
-                        <option>Loundry services</option>
+                        <?php for ($i=0; $i < count($all_services); $i++) { ?>
+                        <option value="<?php echo $all_services[$i]->id ?>">
+                        <?php echo $all_services[$i]->name; }?>  
                        </select>
                        
                       
@@ -166,7 +196,7 @@
                   <div id="distance_div_id" class="form-group has-feedback">
                     <label class="control-label" for="how_far">How far can you travel (km)</label>
                       
-                        <input id="distance_id" name="user_distance" type="text" value="<?php echo $user->distance;?>" placeholder="e.g 99" class="form-control hms-form-control input-md" required="">
+       <input id="distance_id" name="user_distance" type="text" value="<?php echo $user->distance;?>" placeholder="e.g 99" class="form-control hms-form-control input-md" required="">
                        
                       
                   </div>
@@ -190,7 +220,7 @@
                    <div class="form-group">
                          
                        <label class="control-label" for="address1">Password</label>  
-                          <span class="help-block well hms-password-well"><a style="color:green" href="#" data-toggle="modal" data-target="#myModal"> Change your password  <span class="glyphicon glyphicon-pencil"></span></a></span>
+                          <span class="help-block well hms-password-well"><a id="btn_change_pass" style="color:green" href="#" data-toggle="modal" data-target="#myModal"> Change your password  <span class="glyphicon glyphicon-pencil"></span></a></span>
                          
                        </div>
 
@@ -202,7 +232,7 @@
 
                       <div class="form-group">
                           <label class="control-label">Photo</label>
-                          <img src="profile_images/<?php file_exists("profile_images/".$user->id) ? $user->id:"default";?>.png" style="width: 100%" class="img-responsive thumbnail hms-user-img-well" alt="Generic placeholder thumbnail">
+                          <img src="profile_images/<?php echo file_exists("profile_images/".$user->id.".png") ? $user->id:"default";?>.png" style="width: 100%" class="img-responsive thumbnail hms-user-img-well" alt="Generic placeholder thumbnail">
                           <input type="file" name="user_image" class="form-control hms-form-control" style="padding-top: 4px;">
                       </div>
                   
@@ -227,7 +257,7 @@
                   <div class="form-group" style="text-align: right;">
                     <label class="col-md-12 control-label" for="save"></label>
                       <div class="col-md-12">
-                        <button id="update" name="save" class="btn btn-success btn-lg hms-btn-success"> Save changes </button>
+                        <button id="edit" name="save" class="btn btn-success btn-lg hms-btn-success"> Save changes </button>
                     </div>
                   </div>
                 </fieldset>
@@ -248,7 +278,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button  type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Change password</h4>
       </div>
 
@@ -267,8 +297,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="save_password" type="button" class="btn btn-success hms-btn-success" data-dismiss="modal">Save</button>
-        <button type="button" class="btn btn-default hms-btn-default" data-dismiss="modal">Close</button>
+        <button name="save_password" id="save_password" type="button" class="btn btn-success hms-btn-success" data-dismiss="modal">Save</button>
+        <button  type="button" class="btn btn-default hms-btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
 

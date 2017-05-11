@@ -14,7 +14,7 @@
     <?php 
       include("header.php");
       include("service_control.php");
-      $search = new ServiceController("myhelper_db","localhost","root","",true);
+      $search = new ServiceController();
       $keyword=$_GET["key"];
       $results=array();
       if($keyword && strlen($keyword)>0)

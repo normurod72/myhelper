@@ -34,8 +34,13 @@
 	class OrderController
 	{
 		private $db;
-		function __construct($dbname, $host, $username, $password, $debug){
-			$this->debug=$debug;
+		function __construct(){
+		require("config.php");
+			$dbname = $configurations["db_name"];
+			$host = $configurations["host_name"];
+			$username = $configurations["username"];
+			$password = $configurations["password"];
+			$this->debug=$configurations["debug_mode"];
 			$this->db=new PDO("mysql:dbname=$dbname;host=$host",$username,$password);
 		    //$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	    	$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
@@ -47,7 +52,8 @@
 		}
 		function addOrder(&$order)
 		{
-			$query=$this>formatWithQuote("INSERT INTO orders (name, email, contact_number, service_id, master_id, address, lat, lng, money, description, due_date) VALUES ([0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10]);",array($order->name, $order->email, $order->contact_number, $order->service_id, $order->master_id, $order->address, $order->lat, $order->lng, $order->money, $order->description, $order->due_date));
+			//print_r($order);
+			$query=$this->formatWithQuote("INSERT INTO orders (name, email, contact_number, service_id, master_id, address, lat, lng, money, description, due_date) VALUES ([0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10]);",array($order->name, $order->email, $order->contact_number, $order->service_id, $order->master_id, $order->address, $order->lat, $order->lng, $order->money, $order->description, $order->due_date));
 			$res=$this->db->exec($query);
 			if(!$res)
 			{
@@ -122,6 +128,23 @@
 				$order=new Order($id, $row["name"], $row["email"], $row["contact_number"], $row["service_id"], $row["master_id"], $row["address"], $row["lat"], $row["lng"], $row["money"], $row["description"], $row["due_date"]);
 			}
 			return $order;
+		}
+		function getAllOrders(){
+			$orders=array();
+				$res=$this->db->query("SELECT * FROM orders;");
+				if(!$res)
+				{
+					$this->printError();
+				}
+				else
+				{
+					foreach($res as $row)
+					{
+						$orders[]=new Order($row["id"], $row["name"], $row["email"], $row["contact_number"], $row["service_id"], $row["master_id"],$row["address"],$row["lat"],$row["lng"],$row["money"],$row["description"],$row["due_date"]);
+					}	
+				}
+			return $orders;
+
 		}
 		function getNotSelectedOrderForUser($user_id)
 		{

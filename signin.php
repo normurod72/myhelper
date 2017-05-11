@@ -2,7 +2,14 @@
 <html>
 <head>
 	<title>My helper</title>
-  <?php include("includes.html"); ?>
+  <?php 
+  include("includes.html"); 
+  include("service_control.php");
+  $service_controller = new ServiceController();
+  $all_services = $service_controller->getAllServices();
+
+
+  ?>
   <script type="text/javascript" src="js/Validate.js"></script>
 <style type="text/css">
   .navbar-wrapper
@@ -51,20 +58,15 @@
       <div class="form-group">
           <label class="col-md-4 control-label" for="login">What is your profession(s)?</label>  
             <div class="col-md-4">
-          	 <select required class="form-control hms-form-control" multiple="multiple" id="proff" name="proff">
-          		<option value="1">Laptop repair</option>
-          		<option value="2">Phone repair</option>
-          		<option value="3">Electronics repair</option>
-          		<option value="4">Tablets repair</option>
-          		<option>Printer repair</option>
-          		<option>Operation system service</option>
-          		<option>Wi-fi devivice service</option>
-          		<option>Beauty services</option>
-          		<option>Moving services</option>
-          		<option>Cleaning services</option>
-          		<option>Loundry services</option>
+             <select required class="form-control hms-form-control" multiple="multiple" id="proff" name="proff">
+              <?php for ($i=0; $i < count($all_services); $i++) { ?>
+          		<option value="<?php echo $all_services[$i]->id ?>">
+              <?php echo $all_services[$i]->name; ?>  
+              </option>
+          		
+             <?php }?>
           	 </select>
-              <span class="help-block">Choose your profession</span>  
+              
             </div>
       </div>
 

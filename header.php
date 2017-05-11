@@ -14,7 +14,7 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="index.php"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
+                <li><a href="main.php?page=news"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
                 <li><a href="signin.php"><span class="glyphicon glyphicon-user"></span> Sign up</a></li>
                 <li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
               </ul>

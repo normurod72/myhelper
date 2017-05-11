@@ -2,40 +2,33 @@
 <footer>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-4 col-sm-6 footerleft ">
-        <div class="logofooter"> Logo</div>
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley.</p>
-        <p><i class="fa fa-map-pin"></i> 210, Aggarwal Tower, Rohini sec 9, New Delhi -        110085, INDIA</p>
-        <p><i class="fa fa-phone"></i> Phone (India) : +91 9999 878 398</p>
-        <p><i class="fa fa-envelope"></i> E-mail : info@webenlance.com</p>
-        
-      </div>
-      <div class="col-md-2 col-sm-6 paddingtop-bottom">
-        <h6 class="heading7">GENERAL LINKS</h6>
-        <ul class="footer-ul">
-          <li><a href="#"> Career</a></li>
-          <li><a href="#"> Privacy Policy</a></li>
-          <li><a href="#"> Terms & Conditions</a></li>
-          <li><a href="#"> Client Gateway</a></li>
-          <li><a href="#"> Ranking</a></li>
-          <li><a href="#"> Case Studies</a></li>
-          <li><a href="#"> Frequently Ask Questions</a></li>
-        </ul>
-      </div>
-      <div class="col-md-3 col-sm-6 paddingtop-bottom">
-        <h6 class="heading7">LATEST POST</h6>
-        <div class="post">
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6 paddingtop-bottom">
-        <div class="fb-page" data-href="https://www.facebook.com/facebook" data-tabs="timeline" data-height="300" data-small-header="false" style="margin-bottom:15px;" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
-          <div class="fb-xfbml-parse-ignore">
-            <blockquote cite="https://www.facebook.com/facebook"><a href="https://www.facebook.com/facebook">Facebook</a></blockquote>
+      <div class="col-md-6 col-sm-6 footerleft hms-footer-footerleft">
+        <div class="col-md-6">  
+        <h6 class="heading7">Contact us</h6>
+          <div class="logofooter">
+            <a class="navbar-brand" href="#"><img src="images/logo.png" height="50" style="position: relative;top: -10px;"></a>
           </div>
+            <p >MyHelper.uz is made of IUT students. Elbek Doston Jasur Normurod</p>
+            <p><i class="fa fa-home"></i>Mirzo Ulugbek tuman Ziyolilar kochasi 10</p>
+            <p><i class="fa fa-phone"></i> Phone : (+998 97) 777-77-77</p>
+            <p><i class="fa fa-envelope"></i> E-mail : dostonbek.oripjonov@mail.ru</p>
         </div>
+        <div class="col-md-6">
+          <h6 class="heading7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Services</h3>
+            <ul class="footer-ul">
+                <li><a href="homeServices.php" class="hms-footer-paragraph"><i class="fa fa-home hms-footer-paragraph "></i>Home services</a></li>
+                <li><a href="electronics.php" class="hms-footer-paragraph" ><i class="fa fa-laptop hms-footer-paragraph"></i>Electronics</a></li>
+                <li><a href="movingServices.php" class="hms-footer-paragraph"><i class="fa fa-truck hms-footer-paragraph"></i>Moving services</a></li>
+                <li><a href="autoServices.php" class="hms-footer-paragraph" ><i class="fa fa-gears hms-footer-paragraph"></i>Auto services</a></li>
+                <li><a href="fashionServices.php" class="hms-footer-paragraph" ><i class="fa fa-cut hms-footer-paragraph"></i>Fashion services</a></li>
+                <li><a href="storageServices.php" class="hms-footer-paragraph" ><i class="fa fa-database hms-footer-paragraph"></i>Storage services</a></li>
+            </ul>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-sm-6 footerright hms-footer-element">
+          <h6 class="heading7">Our location</h6>
+          <iframe height="250px" style="width: 100%;" src="googleMap.html"></iframe>
       </div>
     </div>
   </div>
@@ -47,14 +40,11 @@
     </div>
     <div class="col-md-6">
       <ul class="bottom_ul">
-        <li><a href="#">webenlance.com</a></li>
-        <li><a href="#">About us</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Faq's</a></li>
-        <li><a href="#">Contact us</a></li>
-        <li><a href="#">Site Map</a></li>
+        <li><a href="#"><i class="fa fa-facebook hms-footer-paragraph"></i></a></li>
+        <li><a href="#"><i class="fa fa-twitter hms-footer-paragraph"></i></a></li>
+        <li><a href="#"><i class="fa fa-youtube hms-footer-paragraph"></i></a></li>
       </ul>
     </div>
-  </div>
+  </div> 
 </div>
 </footer>

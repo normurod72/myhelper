@@ -15,7 +15,7 @@
 		$lat = $_POST['latitude'];
 
 		$user = new User($name, $surname, $address, $professions, $lng, $lat, $email, $password, $number,$distance, -1);
-		$user_controller = new UserController("myhelper_db","localhost","root","",true);
+		$user_controller = new UserController();
 		if($user_controller->addUser($user)){
 			$_SESSION["login"] = $email;
 			$_SESSION["password"] = $password;

@@ -17,8 +17,13 @@
 	class PostController
 	{
 		private $db;
-		function __construct($dbname, $host, $username, $password, $debug){
-			$this->debug=$debug;
+		function __construct(){
+			require("config.php");
+			$dbname = $configurations["db_name"];
+			$host = $configurations["host_name"];
+			$username = $configurations["username"];
+			$password = $configurations["password"];
+			$this->debug=$configurations["debug_mode"];
 			$this->db=new PDO("mysql:dbname=$dbname;host=$host",$username,$password);
 		    //$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	    	$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);

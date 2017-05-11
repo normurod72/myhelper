@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Zaybal 2</title>
+	<title>Service</title>
 	<?php include("includes.html"); ?>
   <link rel="stylesheet" type="text/css" href="css/navbar_fixed.css">
 </head>
@@ -45,7 +45,7 @@
           </div>
           <div class="form-group">
             <label class="control-label">Your e-mail</label>
-              <input maxlength="100" type="text" required="required" name="email" class="form-control hms-form-control" placeholder="your e-mail address" />
+              <input maxlength="100" type="email" required="required" name="email" class="form-control hms-form-control" placeholder="your e-mail address" />
           </div>
           <label class="control-label">Address</label>
           <div class="form-group">
@@ -65,22 +65,12 @@
         <div class="col-md-12">
           <h3>Write what problem you have</h3>
           <div class="form-group">
-              <label  for="login">Choose type of service</label>  
-                <div >
-                  <select class="form-control hms-form-control" id="cleanig" name="services">
-                    <option value="1">Nothing selected</option>
-                    <option>House cleanig</option>
-                    <option>Furniture cleanig</option>
-                    <option>Pest control</option>
-                    </select> 
-                </div>
+              <input type="text" name="service_id" value="<?php echo $_GET['service_id']; ?>" hidden>
               </div>
               <div class="form-group">
                 <label>Write what to do?</label>
                   <div>
-                   <textarea name="description" class="form-control hms-form-control" placeholder="cleaning home... iphone screen repair..." style="height: 100px;">
-                     
-                    </textarea>
+                   <textarea name="description" class="form-control hms-form-control" placeholder="cleaning home... iphone screen repair..." style="height: 100px;"></textarea>
             </div>
           </div>  
         </div>
@@ -99,10 +89,10 @@
               <label  for="login">Max money that you can afford</label>  
                 <div >
                   <select class="form-control hms-form-control" id="cleanig" name="cost">
-                    <option>Nothing selected</option>
-                    <option>100-200ming So'm</option>
-                    <option>200-300ming So'm</option>
-                    <option>400-500ming So'm</option>
+                    <option value="0">Nothing selected</option>
+                    <option value="200">100-200ming So'm</option>
+                    <option value="300">200-300ming So'm</option>
+                    <option value="500">400-500ming So'm</option>
                     </select> 
                 </div>
                 <br>
