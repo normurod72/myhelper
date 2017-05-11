@@ -2,15 +2,17 @@ $(function(){
 	
 	var name_id = $('#name_field');
 	var surname_id = $('#surname_id');
+	var save_password = $('#save_password');
 	var distance_id = $('#distance_id');
 	var email_id = $('#email_id');
 	var currentEmail = email_id.val();
 	var number = $('#contactphone_id');
-	var confirm_new_password = $('#confirm_password_field');
 	var new_password= $('#new_password_field');
 	var current_password = $('#current_password_field');
 	var isCurrent = false;
 	var isConfirmed = false;
+	var confirm_new_password = $('#confirm_password_field');
+	
 	var address_input = $("#map_id").contents().find("#pac-input");
 
 	
@@ -45,7 +47,20 @@ $(function(){
 	
 	$('#save_password').on('click',function(){
 		var isValid =(isCurrent && isConfirmed);
-		save_password(isValid, confirm_new_password.val());
+		//console.log(isValid + "  " + confirm_new_password.val());
+		save_password_user(isValid, confirm_new_password.val());
+
+	});
+	$("#btn_change_pass").on("click",function(){
+			confirm_new_password.val("");
+			new_password.val("");
+			current_password.val("");
+			$('#current_pass_div p').remove();
+			$("#current_pass_div span").remove();
+			$('#new_pass_div p').remove();
+			$("#new_pass_div span").remove();
+			$('#confirm_pass_div p').remove();
+			$("#confirm_pass_div span").remove();
 	});
 });
 
@@ -80,12 +95,14 @@ function updateUserAtributes(event){
 	}
 }
 
-function save_password(isValid, new_pass){
+function save_password_user(isValid, new_pass){
 
 	if(isValid){
+
 		$.ajax({
 			  method: "POST",
 			  url: "update.php",
+			  async: false,
 			  dataType: "json",
 			  data: {update: new_pass}
 			}).done(function( result ) {

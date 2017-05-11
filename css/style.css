@@ -674,3 +674,11 @@ footer { background-color:#0c1a1e; min-height:350px; font-family: 'Open Sans', s
 .hms-search-block-btn{
   font-size: 12pt;
 }
+
+.hms-admin-dashboard-icon{
+  font-size: 100pt;
+}
+
+td{
+  vertical-align: middle !important;
+}

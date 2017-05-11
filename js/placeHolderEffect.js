@@ -22,7 +22,7 @@ function placeHolderEffect (input, textArray)
 		{	
 
 			var temp=this.index;
-			while((temp=this.getRandomInt(0,this.texts.length-1))==this.index);
+			while((temp=this.getRandomInt(0,this.texts.length-1))==this.index && this.texts.length>1);
 			this.index=temp;
 			this.length=this.inp.placeholder.length;
 			this.interval = setInterval(this.changeText,100);
